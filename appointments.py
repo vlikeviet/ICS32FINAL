@@ -1,6 +1,7 @@
 import json, time, os
 from pathlib import Path
 
+
 class Treatment(dict):
     """
 
@@ -8,18 +9,24 @@ class Treatment(dict):
 
     """
 
-    def __init__(self, treatment=None, fee=None, time=None):
+    def __init__(self, treatment=None, fee=None, apt_time=None):
         self.treatment = treatment
         self.fee = fee
-        self.length = time
+        self.length = apt_time
 
-    def set_treatment(self, treatment, fee, time):
+    def set_treatment(self, treatment, fee, apt_time):
         self.treatment = treatment
         self.fee = fee
-        self.length = time
+        self.length = apt_time
 
-    def get_treatment(self):
+    def get_treatment_description(self):
         return self.treatment
+
+    def get_treatment_fee(self):
+        return self.fee
+
+    def get_treatment_length(self):
+        return self.length
 
 
 class Appointments:
@@ -79,21 +86,14 @@ class Appointments:
 
     """
 
-    save_profile accepts an existing dsu file to save the current instance of Profile to the file system.
-
-    Example usage:
-
-    profile = Profile()
-    profile.save_profile('/path/to/file.dsu')
-
-    Raises DsuFileError
+    save_profile accepts an existing apt file to save the current instance of Profile to the file system.
 
     """
 
     def save_appointment(self, path: str) -> None:
         p = Path(path)
 
-        if os.path.exists(p) and p.suffix == '.dsu':
+        if os.path.exists(p) and p.suffix == '.apt':
             try:
                 f = open(p, 'w')
                 json.dump(self.__dict__, f)
@@ -101,38 +101,32 @@ class Appointments:
             except Exception as ex:
                 raise ex
         else:
-            raise Exception("file does not exist!")
+            raise Exception("Appointment.py: File does not exist!")
 
     """
 
-    load_profile will populate the current instance of Profile with data stored in a DSU file.
-
-    Example usage: 
-
-    profile = Profile()
-    profile.load_profile('/path/to/file.dsu')
-
-    Raises DsuProfileError, DsuFileError
+    load_appointment will populate the current instance of Appointment with data stored in a APT file.
 
     """
 
     def load_appointment(self, path: str) -> None:
         p = Path(path)
 
-        if os.path.exists(p) and p.suffix == '.app':
+        if os.path.exists(p) and p.suffix == '.apt':
             try:
                 f = open(p, 'r')
                 obj = json.load(f)
-                self.username = obj['username']
-                self.password = obj['password']
-                self.dsuserver = obj['dsuserver']
-                self.bio = obj['bio']
-                for post_obj in obj['_Profile__posts']:
-                    post = Post(post_obj['entry'])
-                    post.timestamp = post_obj['timestamp']
-                    self.add_post(post)
+                self.app_number = obj['app_number']
+                self.app_time = obj['app_time']
+                self.patient = obj['patient']
+                self.room = obj['room']
+                for treatment_obj in obj['_Appointment__treatments']:
+                    trm = Treatment(treatment_obj['treatment'])
+                    trm.fee = treatment_obj['fee']
+                    trm.time = treatment_obj['time']
+                    self.add_treatment(trm)
                 f.close()
             except Exception as ex:
                 raise ex
         else:
-            raise DsuFileError()
+            raise Exception("Appointment.py: Error on loading treatment")

@@ -14,7 +14,19 @@ this_day = f"{date:%d}"
 this_month = f"{date:%m}"
 this_year = f"{date:%Y}"
 
-#Create root window size 720x480, set title
+
+def new_patient():
+    pass
+
+
+def new_appointment():
+    pass
+
+
+# ********
+# ******** THE MAIN FRAME OF PROGRAM AREA ********
+
+# Create root/main window with size 720x480. Set title and other config
 root = tk.Tk()
 root.geometry("720x480")
 root.title('ICS 32 Appointment')
@@ -23,16 +35,25 @@ root.title('ICS 32 Appointment')
 # If you're curious, feel free to comment out and see how the menu changes.
 # This is from our professor :D
 root.option_add('*tearOff', False)
+# ========= TOP MENU AREA ===============
 
+menu_bar = tk.Menu(root)
+root['menu'] = menu_bar
+menu_file = tk.Menu(menu_bar)
+menu_bar.add_cascade(menu=menu_file, label='File')
+menu_file.add_command(label='New Patient', command=new_patient)
+menu_file.add_command(label='New Appointment', command=new_appointment)
 
+# ========= CALENDAR AREA ===============
 cal_frame = tk.Frame(master=root, width=250)
-cal_frame.pack(fill=tk.BOTH, side=tk.LEFT) = tk.frame
+
+
 def print_sel():
     print(cal.selection_get())
-    cal.see(datetime.date(year=2020, month=2, day=5))
 
 
-cal = Calendar(root, font="Arial 14", foreground="green", selectbackground="red", selectforeground = "green" ,selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day))
+cal = Calendar(root, font="Arial 14", foreground="green", selectbackground="red", selectforeground="green",
+               selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day))
 cal.pack(fill="both", expand=True)
 
 # Remove week number
@@ -40,6 +61,11 @@ for i in range(6):
     cal._week_nbs[i].destroy()
 
 # Button to get date
+
+# ========= APPOINTMENT AREA ===============
+
+# ========= FOOTER / BUTTON AREA ===============
+
 ttk.Button(root, text="ok", command=print_sel).pack()
 
 root.mainloop()
