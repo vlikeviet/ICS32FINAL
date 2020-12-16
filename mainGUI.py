@@ -44,34 +44,37 @@ class Cal_frame(tk.Frame):
     def reset_ui(self):
         pass
 
+    def print_sel(self):
+        print(self.calendar.selection_get())
 
     """
     Draw stuff in my calendar section
     """
 
     def _draw(self):
-        cal_frame = tk.Frame(master=self, width=250)
-        cal_frame.pack(fill=tk.BOTH, side=tk.LEFT)
+        patience_frame = tk.Frame(master=self, width=360, bg="Skyblue")
+        patience_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
+
         self.calendar = Calendar(self, font="Arial 14", foreground="green", selectbackground="red",
                                  selectforeground="green",
                                  selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day))
         self.calendar.pack(fill="both", expand=True)
+        # Remove week number
+        for i in range(6):
+            self.calendar._week_nbs[i].destroy()
 
-        entry_frame = tk.Frame(master=self, bg="")
+        ttk.Button(self, text="Select", command=self.print_sel).pack()
+
+
+        entry_frame = tk.Frame(master=self, bg="red")
         entry_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
         editor_frame = tk.Frame(master=entry_frame, bg="red")
         editor_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
-        scroll_frame = tk.Frame(master=entry_frame, bg="blue", width=10)
-        scroll_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
-
         self.entry_editor = tk.Text(editor_frame, width=0)
         self.entry_editor.pack(fill=tk.BOTH, side=tk.LEFT, expand=True, padx=0, pady=0)
 
-        entry_editor_scrollbar = tk.Scrollbar(master=scroll_frame, command=self.entry_editor.yview)
-        self.entry_editor['yscrollcommand'] = entry_editor_scrollbar.set
-        entry_editor_scrollbar.pack(fill=tk.Y, side=tk.LEFT, expand=False, padx=0, pady=0)
 
 
 
@@ -117,7 +120,7 @@ class MainApp(tk.Frame):
 
 if __name__ == "__main__":
     main = tk.Tk()
-    main.geometry("720x480")
+    main.geometry("720x640")
     main.title('ICS 32 Appointment')
     main.option_add('*tearOff', False)
     MainApp(main)

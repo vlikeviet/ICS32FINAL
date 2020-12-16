@@ -56,9 +56,7 @@ cal = Calendar(root, font="Arial 14", foreground="green", selectbackground="red"
                selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day))
 cal.pack(fill="both", expand=True)
 
-# Remove week number
-for i in range(6):
-    cal._week_nbs[i].destroy()
+
 
 # Button to get date
 
