@@ -52,30 +52,36 @@ class Cal_frame(tk.Frame):
     """
 
     def _draw(self):
-        patience_frame = tk.Frame(master=self, width=360, bg="Skyblue")
-        patience_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
+        # I marked it in the blue area
+        appointment_details_frame = tk.Frame(master=self, width=360, bg="Skyblue", padx=50, pady=50)
+        appointment_details_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
 
+        # I marked it in the green area
+        patient_frame = tk.Frame(master=self, width="360", bg="lime")
+        patient_frame.pack(fill=tk.BOTH, side=tk.TOP)
+        self.posts_tree = ttk.Treeview(patient_frame)
+        self.posts_tree.bind("<<TreeviewSelect>>", self.node_select)
+        self.posts_tree.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=10, pady=10)
+
+        # draw the calendar
         self.calendar = Calendar(self, font="Arial 14", foreground="green", selectbackground="red",
                                  selectforeground="green",
-                                 selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day))
-        self.calendar.pack(fill="both", expand=True)
-        # Remove week number
+                                 selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day),padx=10, pady=10)
+        self.calendar.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
+
+        # Remove week number (B/C this add-ons create extra column to count how many weeks in year. Just don't worry
+        # about this)
         for i in range(6):
             self.calendar._week_nbs[i].destroy()
 
         ttk.Button(self, text="Select", command=self.print_sel).pack()
 
 
-        entry_frame = tk.Frame(master=self, bg="red")
-        entry_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        editor_frame = tk.Frame(master=entry_frame, bg="red")
-        editor_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
-
-        self.entry_editor = tk.Text(editor_frame, width=0)
-        self.entry_editor.pack(fill=tk.BOTH, side=tk.LEFT, expand=True, padx=0, pady=0)
-
-
+    def node_select(self, event):
+        index = int(self.posts_tree.selection()[0]) - 1  # selections are not 0-based, so subtract one.
+        entry = self._posts[index].entry
+        self.set_text_entry(entry)
 
 
 
