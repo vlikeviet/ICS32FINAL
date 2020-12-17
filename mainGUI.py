@@ -71,6 +71,7 @@ class Cal_frame(tk.Frame):
 
         # Remove week number (B/C this add-ons create extra column to count how many weeks in year. Just don't worry
         # about this)
+
         for i in range(6):
             self.calendar._week_nbs[i].destroy()
 
