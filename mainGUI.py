@@ -14,6 +14,8 @@ this_day = f"{date:%d}"
 this_month = f"{date:%m}"
 this_year = f"{date:%Y}"
 
+patient_file_path = "database/patient.pat"
+appointment_file_path = "database/appointment.apt"
 
 def new_patient():
     pass
@@ -39,8 +41,6 @@ class Cal_frame(tk.Frame):
         # into the Body instance
         self._draw()
 
-
-
     def reset_ui(self):
         pass
 
@@ -53,8 +53,10 @@ class Cal_frame(tk.Frame):
 
     def _draw(self):
         # I marked it in the blue area
-        appointment_details_frame = tk.Frame(master=self, width=360, bg="Skyblue", padx=50, pady=50)
+        appointment_details_frame = tk.Frame(master=self, width=360, bg="Skyblue", padx=0, pady=0)
         appointment_details_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
+        # lbl_header = tk.Label(appointment_details_frame, text="Hello!", font=("Arial Bold", 50))
+        # lbl_header.pack(side=tk.TOP, expand=True)
 
         # I marked it in the green area
         patient_frame = tk.Frame(master=self, width="360", bg="lime")
@@ -75,7 +77,16 @@ class Cal_frame(tk.Frame):
         for i in range(6):
             self.calendar._week_nbs[i].destroy()
 
-        ttk.Button(self, text="Select", command=self.print_sel).pack()
+        btn_select = tk.Button(self, text="Select", command=self.print_sel, padx=10, pady=10, bg="pink")
+        btn_select.pack(fill=tk.BOTH, side=tk.TOP)
+
+        # txt = tk.Entry(patient_frame, width=10, text = "TEXT")
+        # txt.pack()
+
+        btn_patient = tk.Button(self, text="New Patient", command=self.print_sel, padx=10, pady=10, bg='lime')
+        btn_patient.pack(fill=tk.BOTH, side=tk.LEFT)
+        btn_appointment = tk.Button(self, text="New Appointment", command=self.print_sel, padx=10, pady=10)
+        btn_appointment.pack(fill=tk.BOTH, side=tk.LEFT)
 
 
 
