@@ -42,12 +42,12 @@ class Appointments:
 
     """
 
-    def __init__(self, app_number, app_time, patient):
+    def __init__(self, app_time=None, app_number=None, patient=None):
         self.app_number = app_number  # REQUIRED
         self.app_time = app_time  # REQUIRED
-        self.patient = patient  # REQUIRED
+        self.patient_ID = patient  # REQUIRED
         self.room = 'unknown'  # OPTIONAL
-        self.fee = ''  # OPTIONAL
+        self.total_fee = 0  # OPTIONAL
         self.__treatment = []  # OPTIONAL
 
     """
@@ -118,7 +118,7 @@ class Appointments:
                 obj = json.load(f)
                 self.app_number = obj['app_number']
                 self.app_time = obj['app_time']
-                self.patient = obj['patient']
+                self.patient_ID = obj['patientID']
                 self.room = obj['room']
                 for treatment_obj in obj['_Appointment__treatments']:
                     trm = Treatment(treatment_obj['treatment'])

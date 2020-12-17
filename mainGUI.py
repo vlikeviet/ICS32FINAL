@@ -1,6 +1,7 @@
 from tkcalendar import Calendar, DateEntry
 from Appointments import *
 from Patient import *
+import os
 
 try:
     import tkinter as tk
@@ -9,6 +10,10 @@ except ImportError:
     import Tkinter as tk
     import ttk
 import datetime
+
+patient_data_file = os.path.dirname(os.path.realpath(__file__))+"/patient.pat"
+appointment_data_file = os.path.dirname(os.path.realpath(__file__))+"/appointment.apt"
+
 
 date = datetime.date.today()
 print("Today is:", date)
@@ -19,12 +24,35 @@ this_year = f"{date:%Y}"
 patient_file_path = "database/patient.pat"
 appointment_file_path = "database/appointment.apt"
 
-def new_patient():
-    pass
 
+def new_patient():
+    print("CREATE NEW PATIENT")
+    my_patient = Patient()
+    my_patient._fname = input("First name: ")
+    my_patient._lname = input("Last name: ")
+    my_patient._id = input("Patient ID: ")
+    my_patient._symptom = input("Symptom: ")
+
+    print(my_patient.patient_info())
+    my_patient.save_patient(patient_data_file)
 
 def new_appointment():
-    pass
+    apt_obj = Appointments()
+    apt_obj.app_number = input("Appointment Number: ")
+    apt_obj.app_time = input("Appointment Time: ")
+    apt_obj.patient_ID = input("Patient ID: ")
+    apt_obj.room = input("Room: ")
+
+    # set treatment in each appointment
+    treatment_obj = Treatment()
+    treatment_obj.treatment = input("Treatment: ")
+    treatment_obj.fee = input("Fee: ")
+    treatment_obj.length = input("How long will it take?: ")
+    apt_obj.add_treatment(treatment_obj)
+
+    apt_obj.save_appointment(appointment_data_file)
+
+
 
 
 # ********
@@ -73,9 +101,8 @@ class Cal_frame(tk.Frame):
                                  selectmode='day', year=int(this_year), month=int(this_month), day=int(this_day),padx=10, pady=10)
         self.calendar.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        # Remove week number (B/C this add-ons create extra column to count how many weeks in year. Just don't worry
-        # about this)
-
+        # Remove week number (B/C this calendar add-ons create extra column to count how many weeks in year. Just don't
+        # worry about this)
         for i in range(6):
             self.calendar._week_nbs[i].destroy()
 
@@ -85,9 +112,9 @@ class Cal_frame(tk.Frame):
         # txt = tk.Entry(patient_frame, width=10, text = "TEXT")
         # txt.pack()
 
-        btn_patient = tk.Button(self, text="New Patient", command=self.new_patient, padx=10, pady=10, bg='lime')
+        btn_patient = tk.Button(self, text="New Patient", command=new_patient, padx=10, pady=10, bg='lime')
         btn_patient.pack(fill=tk.BOTH, side=tk.LEFT)
-        btn_appointment = tk.Button(self, text="New Appointment", command=self.new_patient, padx=10, pady=10)
+        btn_appointment = tk.Button(self, text="New Appointment", command=new_appointment, padx=10, pady=10)
         btn_appointment.pack(fill=tk.BOTH, side=tk.LEFT)
 
         btn_appointment = tk.Button(self, text="Close program", command=self.close, padx=10, pady=10)
@@ -98,21 +125,16 @@ class Cal_frame(tk.Frame):
         entry = self._posts[index].entry
         self.set_text_entry(entry)
 
-    def new_patient(self):
-        MainApp.create_window()
-        pass
-        # my_patient = Patient()
-        # my_patient._fname = input()
-        # my_patient._lname = input()
-        # my_patient._id = input()
-        # my_patient._symptom = input()
 
-    def new_appointment(self):
-        apt_obj = Appointments()
-        pass
+
+
 
     def close(self):
         self.root.destroy()
+
+    def save_patient(self):
+        pass
+
 
 class MainApp(tk.Frame):
     def __init__(self, root):
@@ -126,8 +148,8 @@ class MainApp(tk.Frame):
         self.root['menu'] = menu_bar
         menu_file = tk.Menu(menu_bar)
         menu_bar.add_cascade(menu=menu_file, label='File')
-        menu_file.add_command(label='New Patient', command=Cal_frame.new_patient)
-        menu_file.add_command(label='New Appointment', command=Cal_frame.new_appointment)
+        menu_file.add_command(label='New Patient', command=new_patient)
+        menu_file.add_command(label='New Appointment', command=new_appointment)
         menu_file.add_command(label='Close', command=self.close)
 
         self.calendar = Cal_frame(self.root)
@@ -137,12 +159,8 @@ class MainApp(tk.Frame):
         print(frame.selection_get())
         return frame.selection_get()
 
-    def create_window():
-        root = tk.Tk()
-        b = tk.Frame()
-        b.pack()
 
-        root.mainloop()
+
 
 
     def close(self):
