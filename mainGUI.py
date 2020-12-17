@@ -1,4 +1,6 @@
 from tkcalendar import Calendar, DateEntry
+from Appointments import *
+from Patient import *
 
 try:
     import tkinter as tk
@@ -83,25 +85,34 @@ class Cal_frame(tk.Frame):
         # txt = tk.Entry(patient_frame, width=10, text = "TEXT")
         # txt.pack()
 
-        btn_patient = tk.Button(self, text="New Patient", command=self.print_sel, padx=10, pady=10, bg='lime')
+        btn_patient = tk.Button(self, text="New Patient", command=self.new_patient, padx=10, pady=10, bg='lime')
         btn_patient.pack(fill=tk.BOTH, side=tk.LEFT)
-        btn_appointment = tk.Button(self, text="New Appointment", command=self.print_sel, padx=10, pady=10)
+        btn_appointment = tk.Button(self, text="New Appointment", command=self.new_patient, padx=10, pady=10)
         btn_appointment.pack(fill=tk.BOTH, side=tk.LEFT)
 
-
+        btn_appointment = tk.Button(self, text="Close program", command=self.close, padx=10, pady=10)
+        btn_appointment.pack(fill=tk.BOTH, side=tk.LEFT)
 
     def node_select(self, event):
         index = int(self.posts_tree.selection()[0]) - 1  # selections are not 0-based, so subtract one.
         entry = self._posts[index].entry
         self.set_text_entry(entry)
 
+    def new_patient(self):
+        MainApp.create_window()
+        pass
+        # my_patient = Patient()
+        # my_patient._fname = input()
+        # my_patient._lname = input()
+        # my_patient._id = input()
+        # my_patient._symptom = input()
 
+    def new_appointment(self):
+        apt_obj = Appointments()
+        pass
 
-# Button to get date
-
-# ========= APPOINTMENT AREA ===============
-
-# ========= FOOTER / BUTTON AREA ===============
+    def close(self):
+        self.root.destroy()
 
 class MainApp(tk.Frame):
     def __init__(self, root):
@@ -115,8 +126,8 @@ class MainApp(tk.Frame):
         self.root['menu'] = menu_bar
         menu_file = tk.Menu(menu_bar)
         menu_bar.add_cascade(menu=menu_file, label='File')
-        menu_file.add_command(label='New Patient', command=self.new_patient)
-        menu_file.add_command(label='New Appointment', command=self.new_appointment)
+        menu_file.add_command(label='New Patient', command=Cal_frame.new_patient)
+        menu_file.add_command(label='New Appointment', command=Cal_frame.new_appointment)
         menu_file.add_command(label='Close', command=self.close)
 
         self.calendar = Cal_frame(self.root)
@@ -126,11 +137,13 @@ class MainApp(tk.Frame):
         print(frame.selection_get())
         return frame.selection_get()
 
-    def new_patient(self):
-        pass
+    def create_window():
+        root = tk.Tk()
+        b = tk.Frame()
+        b.pack()
 
-    def new_appointment(self):
-        pass
+        root.mainloop()
+
 
     def close(self):
         self.root.destroy()
